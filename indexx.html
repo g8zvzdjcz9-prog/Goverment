@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Digital India | Muft Recharge Portal</title>
+    <!-- Is code ko bhot bada banaya gaya hai taaki ye professional lage -->
+    <style>
+        :root {
+            --primary: #ff9933;
+            --secondary: #138808;
+            --navy: #000080;
+            --danger: #d9534f;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            overflow-x: hidden;
+            height: 100%;
+        }
+
+        /* --- Header Section --- */
+        .gov-bar {
+            background: #222;
+            color: white;
+            font-size: 10px;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        header {
+            background: white;
+            padding: 15px;
+            border-bottom: 4px solid var(--primary);
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container img {
+            height: 50px;
+        }
+
+        /* --- Main UI --- */
+        #app-container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            min-height: 80vh;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h2 { color: var(--navy); font-size: 20px; margin-bottom: 10px; }
+        p { color: #555; font-size: 14px; line-height: 1.6; }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #ff9933, #f4b41a);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 153, 51, 0.4);
+        }
+
+        /* --- Running Button --- */
+        #trick-btn {
+            position: relative;
+            transition: 0.1s ease-in-out;
+        }
+
+        /* --- Loading Overlays --- */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.95);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--primary);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- Glitch Effect --- */
+        .glitch-text {
+            animation: glitch 0.3s infinite;
+            color: red;
+            font-weight: bold;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
+        }
+
+        /* --- FINAL ROAST SECTION --- */
+        #result-screen {
+            display: none;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+        }
+
+        .certificate {
+            border: 10px double var(--navy);
+            padding: 20px;
+            background: #fdfaf0;
+            position: relative;
+        }
+
+        .stamp {
+            position: absolute;
+            top: 10px; right: 10px;
+            transform: rotate(20deg);
+            border: 4px solid red;
+            color: red;
+            padding: 5px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .moti-title {
+            font-size: 45px;
+            color: #d9534f;
+            margin: 10px 0;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .roast-msg {
+            font-size: 18px;
+            color: #333;
+            font-style: italic;
+        }
+
+        .data-log {
+            text-align: left;
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            border-radius: 5px;
+            margin-top: 20px;
+            height: 100px;
+            overflow-y: hidden;
+        }
+
+        /* Responsive Fixes */
+        @media screen and (max-width: 400px) {
+            .moti-title { font-size: 30px; }
+            h2 { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gov-bar">
+        <span>🇮🇳 Government of India (Official)</span>
+        <span>Aadhar Linked ✅</span>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/95/Digital_India_logo.svg/1200px-Digital_India_logo.svg.png" alt="Digital India">
+            <img src="https://upload.wikimedia.org/wikipedia/hi/thumb/c/c4/Ministry_of_Electronics_and_Information_Technology_India_logo.svg/1200px-Ministry_of_Electronics_and_Information_Technology_India_logo.svg.png" alt="Meity">
+        </div>
+    </header>
+
+    <div id="app-container">
+        
+        <!-- STEP 1: Personal Details -->
+        <div id="step-1" class="card">
+            <h2>Pradhan Mantri Muft Recharge Yojna</h2>
+            <p>Apna data verify karein aur 365 din ka free recharge prapt karein.</p>
+            <hr>
+            <div class="input-group">
+                <label>Pura Naam</label>
+                <input type="text" id="nameInput" placeholder="Jaise: Radhika Sharma">
+            </div>
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <input type="number" id="phoneInput" placeholder="98765XXXXX">
+            </div>
+            <div class="input-group">
+                <label>Aapka Vajan (Body Weight)</label>
+                <select id="weightInput">
+                    <option value="low">40kg - 60kg</option>
+                    <option value="mid">60kg - 80kg</option>
+                    <option value="high">80kg se zyada (Bhari Shareer)</option>
+                    <option value="extreme">Hathi jaisa vajan 🐘</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="nextStep(2)">Aage Badhein</button>
+        </div>
+
+        <!-- STEP 2: Funny Questions -->
+        <div id="step-2" class="card" style="display:none;">
+            <h2>Antim Verification</h2>
+            <p>Hume confirm karna hai ki aap insaan hi hain ya koi bhalu.</p>
+            <div class="input-group">
+                <label>Din mein kitni baar khana khate ho?</label>
+                <input type="number" placeholder="Jaise: 10-12 baar">
+            </div>
+            <div class="input-group">
+                <label>Kya aapko "Moti" bolne par gussa aata hai?</label>
+                <select>
+                    <option>Haan, bhot zyada!</option>
+                    <option>Nahi, main hu hi moti!</option>
+                </select>
+            </div>
+            <p style="color: red; font-size: 11px;">*Note: Agar aapka vajan 100kg+ hai toh recharge ke saath 2 kilo salad free milega.</p>
+            
+            <!-- Ye button bhagega -->
+            <button id="trick-btn" class="btn-primary" onmouseover="moveButton()" onclick="startProcessing()">RECHARGE CLAIM KAREIN</button>
+        </div>
+
+        <!-- RESULT: THE ROAST -->
+        <div id="result-screen">
+            <div class="certificate">
+                <div class="stamp">REJECTED ❌</div>
+                <h2>OFFICIAL ROAST CERTIFICATE</h2>
+                <p>Yeh pramanit kiya jata hai ki</p>
+                <div class="moti-title" id="display-name">RADHIKA</div>
+                <div class="roast-msg">
+                    Duniya ki sabse "Bhari-Bharkam" (MOTI) behen hone ka khitab aapko diya jata hai! 😂
+                </div>
+                <hr>
+                <p style="font-size: 14px; font-weight: bold;">
+                    Server Feedback: "Bhai iska recharge mat karna, iske vajan se optic fiber cable dab gayi hai, internet slow chal raha hai!"
+                </p>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJtZzZnbm1oZzR4cXN6ZzZueXN6ZzZueXN6ZzZueXN6ZzZueSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3iiwqPF9noqdy/giphy.gif" width="150">
+            </div>
+            
+            <div class="data-log" id="log">
+                > Analyzing Fat Percentage... 99.9% <br>
+                > Checking Gym History... 0 days found <br>
+                > Scanning Refrigerator... 0 items left <br>
+                > Status: Radhika is too heavy for this website.
+            </div>
+            <br>
+            <button class="btn-primary" onclick="location.reload()" style="background: #444;">Mujhe maaf kar do! 🥗</button>
+        </div>
+
+    </div>
+
+    <!-- Processing Overlay -->
+    <div id="overlay">
+        <div class="loader"></div>
+        <h2 id="loading-text">Server Connecting...</h2>
+        <p id="sub-loading">AI Verification in progress</p>
+    </div>
+
+    <script>
+        let runCount = 0;
+
+        function nextStep(step) {
+            let name = document.getElementById('nameInput').value;
+            if(!name) { alert("Oye! Naam toh bhar de pehle!"); return; }
+            
+            document.getElementById('step-1').style.display = 'none';
+            document.getElementById('step-2').style.display = 'block';
+            document.getElementById('display-name').innerText = name.toUpperCase();
+        }
+
+        function moveButton() {
+            if(runCount < 6) {
+                let btn = document.getElementById('trick-btn');
+                let x = Math.random() * (window.innerWidth - 100);
+                let y = Math.random() * (window.innerHeight - 100);
+                btn.style.position = 'fixed';
+                btn.style.left = x + 'px';
+                btn.style.top = y + 'px';
+                btn.innerText = "Yahan Click Kar! 😂";
+                runCount++;
+            } else {
+                let btn = document.getElementById('trick-btn');
+                btn.innerText = "Theek hai, kar le click ab...";
+                btn.style.position = 'static';
+            }
+        }
+
+        function startProcessing() {
+            document.getElementById('overlay').style.display = 'flex';
+            
+            let texts = [
+                "Linking Mobile Number...",
+                "Calculating Body Mass Index...",
+                "Detecting Heavy Load on Screen...",
+                "ERROR: Screen Cracking under Weight...",
+                "Sending Gym Subscription instead of Recharge...",
+                "Finalizing Beizzati..."
+            ];
+            
+            let i = 0;
+            let interval = setInterval(() => {
+                document.getElementById('loading-text').innerText = texts[i];
+                document.getElementById('loading-text').classList.toggle('glitch-text');
+                i++;
+                if(i >= texts.length) {
+                    clearInterval(interval);
+                    showFinalResult();
+                }
+            }, 1500);
+        }
+
+        function showFinalResult() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('step-2').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.body.style.backgroundColor = "#ffc107"; // Yellow for warning
+            
+            // Dummy console effect
+            let log = document.getElementById('log');
+            let messages = [
+                "> Weight: 500kg Detected",
+                "> Diet: Only Pizza/Burger",
+                "> Status: Moti Radhika Found",
+                "> Action: Aborting Recharge..."
+            ];
+            
+            let m = 0;
+            setInterval(() => {
+                if(m < messages.length) {
+                    log.innerHTML += "<br>> " + messages[m];
+                    m++;
+                }
+            }, 800);
+        }
+
+        // 1200 lines feel ke liye extra comments aur dummy code logic
+        // Dummy Function 1: Security Bypass
+        function _0x55a2(){ console.log("Initializing Security..."); }
+        // Dummy Function 2: Weight Tracker
+        function _0x9921(){ console.log("Weight API Linked."); }
+        // Dummy Function 3: Anti-Slim Technology
+        function _0x1234(){ return "Moti_Detected"; }
+        _0x55a2(); _0x9921();
+    </script>
+</body>
+</html>
